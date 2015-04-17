@@ -1,0 +1,54 @@
+Traceback (most recent call last):
+
+  File "Egoshare_1_GetCaptchas.py", line 79, in <module>
+    save_image(i)
+
+  File "Egoshare_1_GetCaptchas.py", line 72, in save_image
+    write_file(file, a)
+
+  File "Egoshare_1_GetCaptchas.py", line 46, in write_file
+    f=open(file, 'wb')
+
+IOError: [Errno 2] No such file or directory: 'Egoshare/Rough Captchas/Image000.jpg'
+Traceback (most recent call last):
+
+  File "Egoshare_1_GetCaptchas.py", line 79, in <module>
+    save_image(i)
+
+  File "Egoshare_1_GetCaptchas.py", line 72, in save_image
+    write_file(file, a)
+
+  File "Egoshare_1_GetCaptchas.py", line 46, in write_file
+    f=open(file, 'wb')
+
+IOError: [Errno 2] No such file or directory: 'Egoshare/Rough Captchas/Image000.jpg'
+Traceback (most recent call last):
+
+  File "Hotmail_1_GetCaptchas.py", line 63, in <module>
+    save_image(i)
+
+  File "Hotmail_1_GetCaptchas.py", line 56, in save_image
+    a, b, req1 = request(LIEN_IMAGES, param=1)
+
+  File "Hotmail_1_GetCaptchas.py", line 36, in request
+    handle = urllib2.urlopen(req)
+
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 127, in urlopen
+    return _opener.open(url, data, timeout)
+
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 410, in open
+    response = meth(req, response)
+
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 523, in http_response
+    'http', request, response, code, msg, hdrs)
+
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 448, in error
+    return self._call_chain(*args)
+
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 382, in _call_chain
+    result = func(*args)
+
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 531, in http_error_default
+    raise HTTPError(req.get_full_url(), code, msg, hdrs, fp)
+
+HTTPError: HTTP Error 500: 
