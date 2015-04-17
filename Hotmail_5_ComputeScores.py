@@ -2,11 +2,11 @@
 import Break_Captcha_util
 import pickle
 import os
-import Image
+from PIL import Image
 import math
 
-import psyco
-psyco.full()
+#import psyco
+#psyco.full()
 
 #TRACEBACK
 import traceback
@@ -23,15 +23,15 @@ sys.excepthook=Myexcepthook
 def compute_scores_list(model, captcha, parent=None):
         #Liste des scores
         liste_scores = []
-        
+
         #Compute scores for all widths and starting positions
         for size in range(8, 30, 1):
             print size, "/", 30
             for starting_pos in range(0, captcha.size[0] - size):
                 preprocessed_captcha_part = captcha.crop((starting_pos, 0, starting_pos+size, 31))
-                
-                
-                #Si parent=None, on enlève le blanc sur les cotés
+
+
+                #Si parent=None, on enlï¿½ve le blanc sur les cotï¿½s
                 miny=100000
                 maxy=0
                 for i in xrange(size):
@@ -40,7 +40,7 @@ def compute_scores_list(model, captcha, parent=None):
                             if j<miny:
                                 miny=j
                             if j>maxy:
-                                maxy=j        
+                                maxy=j
                 preprocessed_captcha_part = preprocessed_captcha_part.crop((0, miny, size, maxy+1))
                 sizei = maxy-miny+1
 
@@ -81,7 +81,7 @@ def use_dynamic_programming(liste_scores):
         sizes.add(size)
         if pos>posmax:
             posmax=pos
-    
+
     d[0] = {0 : [[], [], 0],
           1 : [[], [], 0],
           2 : [[], [], 0],
@@ -97,24 +97,24 @@ def use_dynamic_programming(liste_scores):
 
 
     for (pos, size, score, prediction) in liste_scores:
-        #Pour mettre à jour le plus haut score, il faut que:
-        #- le score de l'intervalle considéré soit plus grand que le score courant (LE PLUS HAUT SCORE)
-        #- il y ait une entrée dans le dico correspondant au début de l'intervalle considéré (LES INTERVALLES SE TOUCHENT)
-        #- l'intervalle considéré
-        
+        #Pour mettre ï¿½ jour le plus haut score, il faut que:
+        #- le score de l'intervalle considï¿½rï¿½ soit plus grand que le score courant (LE PLUS HAUT SCORE)
+        #- il y ait une entrï¿½e dans le dico correspondant au dï¿½but de l'intervalle considï¿½rï¿½ (LES INTERVALLES SE TOUCHENT)
+        #- l'intervalle considï¿½rï¿½
+
         if d.has_key(pos-size):
-            #Trajectoires précédentes
+            #Trajectoires prï¿½cï¿½dentes
             precedent = d[pos-size]
-            
-            #Rajout de la trajectoire considéré à la précédente
+
+            #Rajout de la trajectoire considï¿½rï¿½ ï¿½ la prï¿½cï¿½dente
             for [sommets, predicts, old_score] in precedent.values():
                 path_length_old = len(predicts)
-                
+
                 #print 'path_length_old: ', path_length_old
                 if path_length_old < 6:
                     if d[pos][path_length_old+1][2] < old_score + score:
                         d[pos][path_length_old+1] = [sommets+[pos], predicts+[prediction], old_score+score]
-            
+
     ##        print "append at ", pos,
     ##        raw_input()
 
@@ -141,16 +141,16 @@ def get_prediction(model, captcha, parent):
     liste_scores = compute_scores_list(model, captcha, parent=None)
     print "Done."
     print
-    
+
     print "Solving optimization problem..."
     preds, segs = use_dynamic_programming(liste_scores)
     print "Done."
     print
 
-    #Prédiction
+    #Prï¿½diction
     parent.res.SetLabel(preds)
-    
-    #Image segmentée
+
+    #Image segmentï¿½e
     segmented_captcha = parent.beau_captcha.convert("RGB")
     h = segmented_captcha.size[1]
     for x in segs:
@@ -159,8 +159,8 @@ def get_prediction(model, captcha, parent):
 
     parent.SetGraphImage(segmented_captcha)
     parent.actif = False
-    parent.launchPredictionButton.SetLabel("Lancer la prédiction")
-    
+    parent.launchPredictionButton.SetLabel("Lancer la prï¿½diction")
+
 
 
 if __name__ == "__main__":
@@ -168,19 +168,19 @@ if __name__ == "__main__":
         #MODEL_FILE = "Hotmail/Models/model_31x31_3DE2MT_classes.svm"
         CAPTCHA_FILE = os.path.join("Hotmail", "Rough Captchas", 'Image011.jpg')
 
-        #Chargement du modèle
+        #Chargement du modï¿½le
         model = Break_Captcha_util.load_model(MODEL_FILE)
 
-        #Préprocessing du captcha
+        #Prï¿½processing du captcha
         captcha, beau_captcha = Break_Captcha_util.preprocess_captcha_part(CAPTCHA_FILE)
-        
+
         #Calcul des scores
         liste_scores = compute_scores_list(model, captcha)
 
-        #Chargement des scores sauvegardés
+        #Chargement des scores sauvegardï¿½s
 ##        f=open('scores.pck')
 ##        liste_scores = pickle.load(f)
 ##        f.close()
         use_dynamic_programming(liste_scores)
-        
+
         raw_input()

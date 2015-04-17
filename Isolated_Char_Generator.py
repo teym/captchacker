@@ -1,15 +1,15 @@
 #!coding: utf-8
-import psyco
-psyco.full()
+#import psyco
+#psyco.full()
 
 from Captcha.Visual import Text, Backgrounds, Distortions, ImageCaptcha
 from Captcha import Words
 import random
 import os
-import ImageFont
-import ImageChops
+from PIL import ImageFont
+from PIL import ImageChops
 
-import Image
+from PIL import Image
 
 ### CAPTCHA GENERATOR ###
 
@@ -24,14 +24,14 @@ class MyCaptcha(ImageCaptcha):
         self.solution = solution
         self.alignx = alignx
         self.aligny = aligny
-        
+
         font = ImageFont.truetype(*self.fontFactory.pick())
         #textSize = font.getsize(self.solution)
         #print textSize
         #self.defaultSize = (38, self.distortion[0]+10+self.scale)
         self.defaultSize = size
         ImageCaptcha.__init__(self)
-        
+
 
     def getLayers(self):
         #self.addSolution(self.solution)
@@ -67,12 +67,12 @@ def Generate_Set(DESTINATION_FOLDER,CLEAN_DESTINATION_FOLDER,
                         print "Impossible de supprimer le dossier", os.path.join(DESTINATION_FOLDER, subdir), "..."
             print "Done..."
             print
-    
+
     for elem in elem_to_gen:
         print "Generating", elem, "..."
         if not os.path.isdir(os.path.join(DESTINATION_FOLDER,elem)):
             os.mkdir(os.path.join(DESTINATION_FOLDER,elem))
-        
+
         for font, SEUILRANGE in fonts:
             font_name = font.split('/')[-1].split('.')[0]
             for scale in range(SCALE_MIN, SCALE_MAX, STEP):
@@ -83,7 +83,7 @@ def Generate_Set(DESTINATION_FOLDER,CLEAN_DESTINATION_FOLDER,
                                 for SEUIL in SEUILRANGE:
                                     captcha=MyCaptcha(scale, distortion = (distort_w,distort_h), solution = elem, font=font, alignx=alignx, aligny=aligny, size = DEFAULT_SIZE)
                                     image=captcha.render().convert('L')
-                                    
+
                                     for i in xrange(DEFAULT_SIZE[0]):
                                         for j in xrange(DEFAULT_SIZE[1]):
                                             val = image.getpixel((i,j))
@@ -92,8 +92,8 @@ def Generate_Set(DESTINATION_FOLDER,CLEAN_DESTINATION_FOLDER,
                                             else:
                                                 val = 255
                                             image.putpixel((i,j), val)
-                                    
-                                    
+
+
                                     if DXDY:
                                         for (i,j) in DXDY:
                                             if (i,j) != (0,0):
@@ -113,13 +113,13 @@ def Generate_Set(DESTINATION_FOLDER,CLEAN_DESTINATION_FOLDER,
                                             image1 = ImageChops.invert(image1)
                                             image1.save(file)
                                             #print file
-                                            
+
                                             image1 = invert.rotate(-rotation)
                                             file = os.path.join(DESTINATION_FOLDER,elem,elem+'_'+font_name+'_'+str(scale)+'_'+str(distort_w)+'_'+str(distort_h)+'_'+str(SEUIL)+'_'+str(alignx)+'_'+str(aligny)+'_'+str(-rotation)+'.bmp')
                                             image1 = ImageChops.invert(image1)
                                             image1.save(file)
                                             #print file
-                                    
+
         print elem + " files generated.\n"
 
 
@@ -127,16 +127,13 @@ def Generate_Set(DESTINATION_FOLDER,CLEAN_DESTINATION_FOLDER,
 
 def Generate_Element_List(GENERATE_CAPITAL_LETTERS, GENERATE_DIGITS):
         elem_to_gen = []
-        
+
         if GENERATE_CAPITAL_LETTERS:
             for i in range(65,91):
                 elem_to_gen.append(chr(i))
-            
+
         if GENERATE_DIGITS:
             for i in range(48,58):
                 elem_to_gen.append(chr(i))
-            
+
         return elem_to_gen
-
-
-

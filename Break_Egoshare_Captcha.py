@@ -1,14 +1,17 @@
 #!coding: utf-8
 from svm import *
 import os, sys
-import Image, time
+from PIL import Image
+import time
 import wx
 
-import psyco
-psyco.full()
+#import psyco
+#psyco.full()
 
 from Preprocess import preprocess_captcha
 from Preprocess import load_image
+from svm import *
+from svmutil import *
 
 TEST = 0
 VERBOSE = 0
@@ -24,7 +27,8 @@ def load_model(chemin, parent=None, fichier = ""):
         print "####################################################################################"
         if parent:
             parent.SetPathLabel("Loading model...")
-        model = svm_model(chemin)
+        #model = svm_model(chemin)
+        model = svm_load_model(chemin)
         print "Model successfully loaded."
         if parent:
             parent.SetPathLabel(fichier)
@@ -34,13 +38,13 @@ def load_model(chemin, parent=None, fichier = ""):
 
 
 def preprocess_captcha_part(file, folder=".", parent = None, remove=True):
-    #Fait l'extraction à  partir de la starting position, sur une largeur length, et fait éventuellement du preprocessing.
-    
+    #Fait l'extraction ï¿½ï¿½ partir de la starting position, sur une largeur length, et fait ï¿½ventuellement du preprocessing.
+
     if parent:
         beau_captcha = Image.open(file)
         w,h = beau_captcha.size
         beau_captcha = beau_captcha.convert('RGB').resize((parent.zoom*w, parent.zoom*h))
-    
+
     if os.name == "nt":
         command = '""'+os.path.join(os.getcwd(), "Egoshare", 'Egoshare.exe" "'+file+'""')
     elif os.name == 'posix':
@@ -49,17 +53,17 @@ def preprocess_captcha_part(file, folder=".", parent = None, remove=True):
         print "OS type non supported"
         exit(2)
     os.system(command)
-    
+
 
     letter1 = Image.open(os.path.join(os.getcwd(), "letter1.bmp")).copy()
     letter1_algo = letter1.point(lambda i: (i/255.))
-    
+
     letter2 = Image.open(os.path.join(os.getcwd(), "letter2.bmp")).copy()
     letter2_algo = letter2.point(lambda i: (i/255.))
-    
+
     letter3 = Image.open(os.path.join(os.getcwd(), "letter3.bmp")).copy()
     letter3_algo = letter3.point(lambda i: (i/255.))
-    
+
     if remove:
         os.remove("letter1.bmp")
         os.remove("letter2.bmp")
@@ -78,19 +82,19 @@ def preprocess_captcha_part(file, folder=".", parent = None, remove=True):
 def predict(model, im):
     data = list(im.getdata())
     prediction = model.predict(data)
-    probability = model.predict_probability(data)  
-    
+    probability = model.predict_probability(data)
+
     if VERBOSE:
         print chr(65+int(prediction)), max(probability[1].values())
         #print probability
-    
+
     return chr(65+int(prediction)), str(max(probability[1].values())), probability[1]
-    
-    
-    
+
+
+
 def break_captcha(model, letter1_algo, letter2_algo, letter3_algo, parent=None):
     liste_probas = []
-    
+
     if not TEST:
         prediction1, max_score1, dico1 = predict(model, letter1_algo)
         prediction2, max_score2, dico2 = predict(model, letter2_algo)
@@ -102,7 +106,7 @@ def break_captcha(model, letter1_algo, letter2_algo, letter3_algo, parent=None):
 
     if parent:
         parent.setResults(prediction1, max_score1, prediction2, max_score2, prediction3, max_score3, dico1, dico2, dico3)
-    
+
     return prediction1+prediction2+prediction3
 
 
@@ -127,6 +131,3 @@ def write(s):
     f=open("Egoshare/Models/Stats.txt", "a")
     f.write(s+"\n")
     f.close()
-
-
-

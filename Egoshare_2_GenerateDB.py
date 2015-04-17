@@ -1,5 +1,5 @@
 #!coding: utf-8
-import psyco
+#import psyco
 from Isolated_Char_Generator import *
 from Break_Egoshare_Captcha import *
 import shutil
@@ -20,11 +20,11 @@ if SIMULATION_BASED:
         ##############   SIMULATION   BASED   TRAINING    SET   ######################
         ##############################################################################
         """
-        
+
         GENERATE_CAPITAL_LETTERS = False
         GENERATE_DIGITS = True
         elem_to_gen = Generate_Element_List(GENERATE_CAPITAL_LETTERS, GENERATE_DIGITS)
-        
+
 
         DESTINATION_FOLDER = 'Egoshare/DBTraining-Simulation_based'
         CLEAN_DESTINATION_FOLDER = True
@@ -51,7 +51,7 @@ if SIMULATION_BASED:
         #################   SIMULATION   BASED   TEST    SET   #######################
         ##############################################################################
         """
-        
+
         GENERATE_CAPITAL_LETTERS = False
         GENERATE_DIGITS = True
         elem_to_gen = Generate_Element_List(GENERATE_CAPITAL_LETTERS, GENERATE_DIGITS)
@@ -77,10 +77,10 @@ if SIMULATION_BASED:
 
 
 def Prepare_Dest_Folder(DEST_FOLDER):
-    #Création du dossier de destination
+    #Crï¿½ation du dossier de destination
     if not os.path.isdir(DEST_FOLDER):
         os.mkdir(DEST_FOLDER)
-        
+
     #suppression des anciens fichiers
     print "Removing older files..."
     for subdir in os.listdir(DEST_FOLDER):
@@ -92,8 +92,8 @@ def Prepare_Dest_Folder(DEST_FOLDER):
             except Exception, ex:
                 print "Impossible de supprimer le dossier", os.path.join(DEST_FOLDER, subdir), "..."
     print "Done..."
-            
-    #Création des sous-dossiers
+
+    #Crï¿½ation des sous-dossiers
     for i in range(10):
         folder = os.path.join(DEST_FOLDER, str(i))
         if not os.path.isdir(folder):
@@ -111,11 +111,11 @@ def Generate_Captcha_Based_set(CAPTCHA_SOURCE_FOLDER,DEST_FOLDER):
             print file
 
             preprocess_captcha_part(os.path.join(folder, file),remove=False)
-            
+
             name1 = file[:-4]+"number_1.bmp"
             name2 = file[:-4]+"number_2.bmp"
             name3 = file[:-4]+"number_3.bmp"
-            
+
             shutil.move("letter1.bmp", os.path.join(DEST_FOLDER, file[0], name1))
             shutil.move("letter2.bmp", os.path.join(DEST_FOLDER, file[1], name2))
             shutil.move("letter3.bmp", os.path.join(DEST_FOLDER, file[2], name3))
@@ -160,20 +160,20 @@ if CAPTCHA_BASED:
         model = load_model(MODEL_FILE)
 
         Prepare_Dest_Folder(DEST_FOLDER)
-        
+
         #Remplissage des sous-dossiers
         for folder, subfolders, files in os.walk(CAPTCHA_SOURCE_FOLDER):
             for file in [file for file in files if file[-4:] == ".jpg"]:
                 filename = os.path.join(CAPTCHA_SOURCE_FOLDER, file)
                 print file
-                
+
                 name1 = file[:-4]+"number_1.bmp"
                 name2 = file[:-4]+"number_2.bmp"
                 name3 = file[:-4]+"number_3.bmp"
 
                 letter1_algo, letter2_algo, letter3_algo = preprocess_captcha_part(os.path.join(folder, file),remove=False)
                 prediction = break_captcha(model, letter1_algo, letter2_algo, letter3_algo)
-                
+
                 shutil.move("letter1.bmp", os.path.join(DEST_FOLDER, prediction[0], name1))
                 shutil.move("letter2.bmp", os.path.join(DEST_FOLDER, prediction[1], name2))
                 shutil.move("letter3.bmp", os.path.join(DEST_FOLDER, prediction[2], name3))

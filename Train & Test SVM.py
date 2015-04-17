@@ -1,17 +1,18 @@
 #!coding: utf-8
 from svm import *
+from svmutil import *
 import os, sys
-import Image
+from PIL import Image
 
-import psyco
-psyco.full()
+##import psyco
+##psyco.full()
 
 ##C=10
 ##KERNEL = RBF
 
 if not os.path.isfile(os.path.join(MODEL_FOLDER, MODEL_FILE)) or GENERATE_ANYWAY:
     #Si le modèle n'existe pas ou que l'on veut spécifie GENERATE_ANYWAY=True, on le génère. Sinon, on le charge.
-    
+
     print """
     ##############################################################################
     ############################    TRAINING    ##################################
@@ -24,7 +25,7 @@ if not os.path.isfile(os.path.join(MODEL_FOLDER, MODEL_FILE)) or GENERATE_ANYWAY
     print "LOADING IMAGES..."
 
     train_elem = '3de2mt'
-    
+
     #Train everything
     train_elem = ''
 
@@ -46,37 +47,41 @@ if not os.path.isfile(os.path.join(MODEL_FOLDER, MODEL_FILE)) or GENERATE_ANYWAY
     size = len(samples)
 
     #param = svm_parameter(C = 10,nr_weight = 2,weight_label = [1,0],weight = [10,1], probability=1)
-    param = svm_parameter(kernel_type = KERNEL, C=C, probability = 1)
-    
+    #param = svm_parameter(kernel_type = KERNEL, C=C, probability = 1)
+    param = svm_parameter('-t %s -c %s -b %s' % (KERNEL, C, 1))
+
 
     #kernels : LINEAR, POLY, RBF, and SIGMOID
     #types : C_SVC, NU_SVC, ONE_CLASS, EPSILON_SVR, and NU_SVR
 
-    model = svm_model(problem,param)
-    model.save(os.path.join(MODEL_FOLDER, MODEL_FILE))
-    
+    #model = svm_model(problem,param)
+    model = libsvm.svm_train(problem, param)
+    model = toPyModel(model)
+    #model.save(os.path.join(MODEL_FOLDER, MODEL_FILE))
+    svm_save_model(os.path.join(MODEL_FOLDER, MODEL_FILE),model)
+
     print "Done.\n"
 
 else:
     model = svm_model(os.path.join(MODEL_FOLDER, MODEL_FILE))
     print "Model successfully loaded."
-    
+
 
 def predict(model, chemin_image):
-    
+
     if not os.path.isfile(chemin_image):
         print "FICHIER INEXISTANT"
         return
-    
+
     data = list(Image.open(chemin_image).convert('L').getdata())
     data = map(lambda e:e/255., data)
-    
+
     prediction = model.predict(data)
-    probability = model.predict_probability(data)  
-    
+    probability = model.predict_probability(data)
+
     if VERBOSE:
         print probability
-    
+
     return prediction
 
 

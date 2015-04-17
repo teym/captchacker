@@ -1,7 +1,7 @@
 import os, sys, time
 
-import psyco
-psyco.full()
+#import psyco
+#psyco.full()
 
 WIDTH = 20
 WIDTH = 31

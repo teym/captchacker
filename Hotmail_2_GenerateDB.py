@@ -1,5 +1,5 @@
 #!coding: utf-8
-import psyco
+#import psyco
 from Isolated_Char_Generator import *
 
 
@@ -36,13 +36,13 @@ if GENERATE_TRAINING_SET:
     #########################   TRAINING    SET   ################################
     ##############################################################################
     """
-    
+
     GENERATE_CAPITAL_LETTERS = True
     GENERATE_DIGITS = True
     elem_to_gen = Generate_Element_List(GENERATE_CAPITAL_LETTERS, GENERATE_DIGITS)
-    
+
     #elem_to_gen = '3DE2MT'
-    
+
     DESTINATION_FOLDER = 'Hotmail/DBTraining'
     CLEAN_DESTINATION_FOLDER = True
     DISTORTION_W_MIN = 0
@@ -66,14 +66,14 @@ if GENERATE_VALIDATION_SET:
     ###########################   TEST   SET      ################################
     ##############################################################################
     """
-    
+
     #GENERATE_CAPITAL_LETTERS = True
     #GENERATE_DIGITS = True
     #elem_to_gen = Generate_Element_List(GENERATE_CAPITAL_LETTERS, GENERATE_DIGITS)
-    
+
     #elem_to_gen=['A', 'B', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'T', '2', '3']
     elem_to_gen = ['A', 'B', 'D', 'E', 'M', 'N', 'T', 'U', '2', '3', '8']
-    
+
     DESTINATION_FOLDER = 'Hotmail/DBTest'
     CLEAN_DESTINATION_FOLDER = True
     DISTORTION_W_MIN = 0
@@ -85,7 +85,6 @@ if GENERATE_VALIDATION_SET:
     STEP = 2
     ALIGN_RANGEY = [0.1, 0.5, 0.9]
     ALIGN_RANGEX = [0.5]
-    
+
     Generate_Set(DESTINATION_FOLDER,CLEAN_DESTINATION_FOLDER,DISTORTION_W_MIN,DISTORTION_W_MAX,DISTORTION_H_MIN,
                  DISTORTION_H_MAX,SCALE_MIN,SCALE_MAX,STEP, elem_to_gen, FONTS, ALIGN_RANGEX, ALIGN_RANGEY, DEFAULT_SIZE)
-

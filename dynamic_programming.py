@@ -1,9 +1,9 @@
 #!coding: utf-8
 import pickle
-import psyco
-psyco.full()
+#import psyco
+#psyco.full()
 
-#Chargement des scores sauvegardés
+#Chargement des scores sauvegardï¿½s
 f=open('scores.pck')
 liste_scores = pickle.load(f)
 f.close()
@@ -40,31 +40,31 @@ sizemax = sizes[-1]
 
 
 for (pos, size, score, prediction) in liste_scores:
-    #Pour mettre à jour le plus haut score, il faut que:
-    #- le score de l'intervalle considéré soit plus grand que le score courant (LE PLUS HAUT SCORE)
-    #- il y ait une entrée dans le dico correspondant au début de l'intervalle considéré (LES INTERVALLES SE TOUCHENT)
-    #- l'intervalle considéré
-    
-    #print "position considérée", pos
-    
+    #Pour mettre ï¿½ jour le plus haut score, il faut que:
+    #- le score de l'intervalle considï¿½rï¿½ soit plus grand que le score courant (LE PLUS HAUT SCORE)
+    #- il y ait une entrï¿½e dans le dico correspondant au dï¿½but de l'intervalle considï¿½rï¿½ (LES INTERVALLES SE TOUCHENT)
+    #- l'intervalle considï¿½rï¿½
+
+    #print "position considï¿½rï¿½e", pos
+
 
     if d.has_key(pos-size):
-        #Trajectoires précédentes
+        #Trajectoires prï¿½cï¿½dentes
         precedent = d[pos-size]
-        
-        #Rajout de la trajectoire considéré à la précédente
+
+        #Rajout de la trajectoire considï¿½rï¿½ ï¿½ la prï¿½cï¿½dente
         for [sommets, predicts, old_score] in precedent.values():
             path_length_old = len(predicts)
-            
+
             #print 'path_length_old: ', path_length_old
             if path_length_old < 6:
                 if d[pos][path_length_old+1][2] < old_score + score:
                     d[pos][path_length_old+1] = [sommets+[pos], predicts+[prediction], old_score+score]
-        
+
 ##        print "append at ", pos,
 ##        raw_input()
 
-        
+
         del precedent
 
 segs, preds, score = d[posmax][6]

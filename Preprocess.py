@@ -1,5 +1,7 @@
 #!coding: utf-8
-import os, Image, ImageStat
+import os
+from PIL import Image
+from PIL import ImageStat
 
 SEUIL = 180
 
@@ -8,7 +10,7 @@ def preprocess_captcha(path, parent):
     if not os.path.isfile(path):
         print "FICHIER INEXISTANT"
         return
-    
+
     im=Image.open(path)
     im = im.crop((24, 8, 151, 39)).convert('L')
 
@@ -24,7 +26,7 @@ def preprocess_captcha(path, parent):
                 val = 255
             im.putpixel((i,j), val)
 
-    #Si parent=None, on enlève le blanc sur les cotés
+    #Si parent=None, on enlï¿½ve le blanc sur les cotï¿½s
     minx=100000
     maxx=0
     for i in xrange(w):
@@ -34,7 +36,7 @@ def preprocess_captcha(path, parent):
                     minx=i
                 if i>maxx:
                     maxx=i
-    
+
     im = im.crop((minx, 0, maxx, 31))
 
     DEST = path[:-4]+".bmp"
@@ -43,8 +45,8 @@ def preprocess_captcha(path, parent):
     return DEST
 
 
-## Prend en argument le chemin de l'image, et la transforme en une liste à donner à la SVM
-## Rescale et centre les données
+## Prend en argument le chemin de l'image, et la transforme en une liste ï¿½ donner ï¿½ la SVM
+## Rescale et centre les donnï¿½es
 def load_image_with_mean(path):
     im = Image.open(path)
 
@@ -53,7 +55,7 @@ def load_image_with_mean(path):
 
     #Transforms into list
     data = list(im.getdata())
-    
+
     #Centers data
     stat = ImageStat.Stat(im)
     mean = stat.mean[0]
@@ -73,5 +75,3 @@ def load_image(path):
     data = list(im.getdata())
 
     return data
-
-

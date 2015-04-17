@@ -1,10 +1,10 @@
 #!coding: utf-8
 from svm import *
 import os, sys
-import Image
+from PIL import Image
 
-import psyco
-psyco.full()
+#import psyco
+#psyco.full()
 
 from Preprocess import load_image
 from cross_validation import *
@@ -49,13 +49,13 @@ CRANGE = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 
 for C in CRANGE:
     param = svm_parameter(kernel_type = RBF, C=C, probability = 1) #, gamma=1./(2*1.25**2))
     rate = do_cross_validation(samples, labels, param, 10)
-    
+
     f=open('cross-validation_results.txt', 'a')
     f.write("C="+str(C)+"\tgamma=default\t=>\t"+str(rate)+'\n')
     f.close()
-    
+
     rates.append(rate)
-    
+
 
 print "Cross-validation done\n"
 print "SUCCES RATES: ", rates
@@ -65,4 +65,3 @@ print "C = ", CRANGE[index]
 print "Optimal success rate: ", max(rates)
 
 raw_input()
-
